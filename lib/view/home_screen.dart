@@ -14,7 +14,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   HomeViewViewModel homeViewViewModel = HomeViewViewModel();
 
   @override
@@ -29,34 +28,34 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final userPreference = Provider.of<UserViewModel>(context);
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.teal,
-        elevation: 0,
-        title: const Text("Home Page"),
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-        actions: [
-          Center(
-            child: InkWell(
-              onTap: (){
-                userPreference.remove().then((value){
-                  Navigator.pushNamed(context, RoutesName.login);
-                });
-              },
-              child: const Text('Logout'),
+        appBar: AppBar(
+          backgroundColor: Colors.teal,
+          elevation: 0,
+          title: const Text("Home Page"),
+          centerTitle: true,
+          automaticallyImplyLeading: false,
+          actions: [
+            Center(
+              child: InkWell(
+                onTap: () {
+                  userPreference.remove().then((value) {
+                    Navigator.pushNamed(context, RoutesName.login);
+                  });
+                },
+                child: const Text('Logout'),
+              ),
             ),
-          ),
-          const SizedBox(width: 20,)
-        ],
-      ),
-      body: ChangeNotifierProvider<HomeViewViewModel>(
-        create: (BuildContext context) => homeViewViewModel,
-        child: Consumer<HomeViewViewModel>(
-          builder: (context, value, _){
-            switch(value.moviesList.status!){
-
+            const SizedBox(
+              width: 20,
+            )
+          ],
+        ),
+        body: ChangeNotifierProvider<HomeViewViewModel>(
+          create: (BuildContext context) => homeViewViewModel,
+          child: Consumer<HomeViewViewModel>(builder: (context, value, _) {
+            switch (value.moviesList.status!) {
               case Status.LOADING:
-              return const Center(child: CircularProgressIndicator());
+                return const Center(child: CircularProgressIndicator());
 
               case Status.ERROR:
                 return Center(child: Text(value.moviesList.message.toString()));
@@ -64,24 +63,37 @@ class _HomeScreenState extends State<HomeScreen> {
               case Status.COMPLETED:
                 return ListView.builder(
                   itemCount: value.moviesList.data!.movies!.length,
-                  itemBuilder: (context, index){
+                  itemBuilder: (context, index) {
                     return Card(
                       child: ListTile(
-                        leading: Image.network(value.moviesList.data!.movies![index].posterurl.toString(),
-                        errorBuilder: (context, error,stack){
-                          return const Icon(Icons.error, color: Colors.red,);
-                        },
+                        leading: Image.network(
+                          value.moviesList.data!.movies![index].posterurl
+                              .toString(),
+                          errorBuilder: (context, error, stack) {
+                            return const Icon(
+                              Icons.error,
+                              color: Colors.red,
+                            );
+                          },
                           height: 40,
                           width: 40,
                           fit: BoxFit.cover,
                         ),
-                        title: Text(value.moviesList.data!.movies![index].title.toString()),
-                        subtitle: Text(value.moviesList.data!.movies![index].year.toString()),
+                        title: Text(value.moviesList.data!.movies![index].title
+                            .toString()),
+                        subtitle: Text(value
+                            .moviesList.data!.movies![index].year
+                            .toString()),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(Utils.averageRating(value.moviesList.data!.movies![index].ratings!).toStringAsFixed(1)),
-                            const Icon(Icons.star, color: Colors.yellow,),
+                            Text(Utils.averageRating(value
+                                    .moviesList.data!.movies![index].ratings!)
+                                .toStringAsFixed(1)),
+                            const Icon(
+                              Icons.star,
+                              color: Colors.yellow,
+                            ),
                           ],
                         ),
                       ),
@@ -89,10 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 );
             }
-            return Container();
-          }
-        ),
-      )
-    );
+          }),
+        ));
   }
 }
